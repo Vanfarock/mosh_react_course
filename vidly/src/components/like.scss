@@ -1,0 +1,42 @@
+@use '../index' as global;
+
+.icons {
+  position: relative;
+  // border: 1px solid;
+  // // background: global.$test;
+  // // width: 20px;
+  // // height: 20px;
+}
+
+// .icons:hover {
+//   & > .show-heart {
+//     opacity: 0;
+//   }
+
+//   & > .hide-heart {
+//     opacity: 0.9;
+//   }
+// }
+
+.partial-heart {
+  opacity: 0.9;
+}
+
+.show-heart {
+  opacity: 1;
+}
+
+.hide-heart {
+  opacity: 0;
+}
+
+.heart-icon {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
