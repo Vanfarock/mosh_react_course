@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
-import Like from './like';
+import Like from './common/like';
+import Pagination from './common/pagination';
+import {paginate} from '../utils/paginate';
 
 class Movies extends Component {
-  state = { 
+  state = {
+    pageSize: 5,
     movies: getMovies(),
+    currentPage: 1
   };
 
   render() { 
-    const count = this.state.movies.length;
+    const {pageSize, currentPage, movies: allMovies} = this.state;
+    const count = allMovies.length;
 
     if (count === 0) {
       return (
         <p>There are no movies in the database</p>
       );
     }
+
+    const movies = paginate(allMovies, currentPage, pageSize);
 
     return (
       <>
@@ -31,29 +38,49 @@ class Movies extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(movie => (
+            {movies.map(movie => (
               <tr key={movie._id}>
                 <td className="align-middle">{ movie.title }</td>
                 <td className="align-middle">{ movie.genre.name }</td>
                 <td className="align-middle">{ movie.numberInStock }</td>
                 <td className="align-middle">{ movie.dailyRentalRate }</td>
-                <td className="align-middle">{ movie.dailyRentalRate }</td>
-                <td className="align-middle"><Like /></td>
+                <td className="align-middle"><Like liked={movie.liked} onClick={() => this.handleLike(movie)} /></td>
                 <td className="align-middle">
                   <button className="btn btn-danger btn-sm"
-                          onClick={() => this.handleDelete(movie._id)}>Delete</button>
+                          onClick={() => this.handleDelete(movie)}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <Pagination itemsCount={count}
+                    pageSize={pageSize}
+                    currentPage={currentPage}
+                    onPageChange={this.handlePageChange} />
       </>
     );
   }
 
-  handleDelete = (movieId) => {
+  handleLike = (movie) => {
+    const movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    movies[index] = {...movies[index]}
+    movies[index].liked = !movies[index].liked;
+    
     this.setState({
-      movies: this.state.movies.filter(m => m._id !== movieId)
+      movies
+    });
+  }
+
+  handleDelete = (movie) => {
+    this.setState({
+      movies: this.state.movies.filter(m => m !== movie)
+    });
+  }
+
+  handlePageChange = (page) => {
+    this.setState({
+      currentPage: page
     });
   }
 }
