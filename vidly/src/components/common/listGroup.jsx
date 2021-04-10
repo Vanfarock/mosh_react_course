@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function ListGroup(props) {
-  const {items, textProperty, valueProperty, currentItem, onItemChange} = props;
+function ListGroup({items, textProperty, valueProperty, currentItem, onItemChange}) {
   if (items.length <= 1) return null;
 
   return (
     <ul className="list-group">
-      {items.map((item, index) => (
-        <li key={item[valueProperty] || `${valueProperty}_index`} 
+      {items.map(item => (
+        <li key={item[valueProperty]} 
             className={item === currentItem ? 'list-group-item active' : 'list-group-item'}
             onClick={() => onItemChange(item)}
             role="button">{item[textProperty]}</li>  
