@@ -5,7 +5,7 @@ function ListGroup({items, textProperty, valueProperty, currentItem, onItemChang
   if (items.length <= 1) return null;
 
   return (
-    <ul className="list-group">
+    <ul className="list-group mb-3">
       {items.map(item => (
         <li key={item[valueProperty]} 
             className={item === currentItem ? 'list-group-item active' : 'list-group-item'}
