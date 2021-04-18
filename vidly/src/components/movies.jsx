@@ -48,6 +48,10 @@ class Movies extends Component {
     });
   }
 
+  handleNewMovie = () => {
+    this.props.history.push('/movies/new');
+  }
+
   handleDelete = (movie) => {
     this.setState({
       movies: this.state.movies.filter(m => m !== movie)
@@ -99,6 +103,7 @@ class Movies extends Component {
         </div>}
         
         <div className="col">
+          <button onClick={this.handleNewMovie} className="btn btn-primary">New movie</button>
           <p>Showing {totalCount} movies in the database</p>
           <MoviesTable movies={data}
                        sortColumn={sortColumn}
