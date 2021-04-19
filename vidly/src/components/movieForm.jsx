@@ -102,25 +102,12 @@ class MovieForm extends Form {
   }
 
   render() { 
-    // const { data, genres } = this.state;
-
     return (
       <div>
         <h1>Movie Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
           {this.renderCheckBox('genreId', 'Genre', this.formatGenres())}
-          {/* <div className="form-group">
-            <label htmlFor="genreId" className="control-label">Genre</label>
-            <div>
-              <select className="form-control" id="genreId" name="genreId" value={data.genreId} onChange={e => this.handleChange(e)}>
-                {genres && genres.map(genre => (
-                  <option key={genre._id} value={genre._id}>{genre.name}</option>  
-                ))}
-              </select>
-            </div>
-            {this.state.errors['genreId'] && <div className="alert alert-danger">{this.state.errors['genreId']}</div>}
-          </div> */}
           {this.renderInput('numberInStock', 'Number in stock', 'number')}
           {this.renderInput('dailyRentalRate', 'Rate', 'number')}
           {this.renderButton('Save')}

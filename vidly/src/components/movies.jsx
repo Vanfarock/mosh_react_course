@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getMovies } from '../services/fakeMovieService';
+import { getMovies, saveMovie, deleteMovie } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
 import MoviesTable from './moviesTable';
 import ListGroup from './common/listGroup';
@@ -40,12 +40,16 @@ class Movies extends Component {
   handleLike = (movie) => {
     const movies = [...this.state.movies];
     const index = movies.indexOf(movie);
-    movies[index] = {...movies[index]}
-    movies[index].liked = !movies[index].liked;
-    
+    const updatedMovie = {...movies[index]};
+    updatedMovie.liked = !updatedMovie.liked;
+    movies[index] = updatedMovie;
+
     this.setState({
       movies
     });
+
+    updatedMovie.genreId = updatedMovie.genre._id;
+    saveMovie(updatedMovie);
   }
 
   handleNewMovie = () => {
@@ -56,6 +60,8 @@ class Movies extends Component {
     this.setState({
       movies: this.state.movies.filter(m => m !== movie)
     });
+
+    deleteMovie(movie._id);
   }
 
   handleSort = sortColumn => {
@@ -103,7 +109,7 @@ class Movies extends Component {
         </div>}
         
         <div className="col">
-          <button onClick={this.handleNewMovie} className="btn btn-primary">New movie</button>
+          <button onClick={this.handleNewMovie} className="btn btn-primary mb-3">New movie</button>
           <p>Showing {totalCount} movies in the database</p>
           <MoviesTable movies={data}
                        sortColumn={sortColumn}
