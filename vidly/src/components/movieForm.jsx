@@ -1,83 +1,65 @@
 import React from 'react';
-// import { PropTypes } from 'prop-types';
 import Joi from 'joi-browser';
 import Form from './common/form';
 import { getMovie, saveMovie } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
-// import { Redirect } from 'react-router-dom';
 
 class MovieForm extends Form {
-  constructor(props) {
-    super();
-
-    let movieId = this.getMovieId(props);
-    const movie = getMovie(movieId);
-    const emptyGenre = { _id: '', name: '' };
-    const genres = [emptyGenre, ...getGenres()];
-
-    if (movieId && !movie) {
-      this.redirectToNotFound(props);
-    }
-
-    this.state = {
-      data: this.initializeData(movie),
-      errors: { },
-      movie,
-      genres
-    };
-
-    this.schema = {
-      _id: Joi.string(),
-      title: Joi.string()
-                .required()
-                .label('Title'),
-      numberInStock: Joi.number()
-                        .positive()
-                        .integer()
-                        .max(100)
-                        .required()
-                        .label('Number in Stock'),
-      dailyRentalRate: Joi.number()
-                          .required()
-                          .positive()
-                          .max(10)
-                          .label('Rate'),
-      genreId: Joi.string()
-                .required()
-                .label('Genre'),
-    }
-  }
-
-  getMovieId(props) {
-    if (props && props.match) {
-      return props.match.params.id;
-    }
-    return;
-  }
-
-  redirectToNotFound(props) {
-    const { history } = props;
-
-    history.replace('/not-found')
-  }
-
-  initializeData(movie) {
-    if (movie) {
-      const { _id, title, genre, numberInStock, dailyRentalRate } = movie;
-      
-      return {
-        _id,
-        title,
-        genreId: genre._id,
-        numberInStock,
-        dailyRentalRate
-      }
-    }
-    return {
+  state = {
+    data: {
       title: '',
       numberInStock: '',
       dailyRentalRate: '',
       genreId: '',
+    },
+    errors: { },
+    genres: []
+  };
+
+  schema = {
+    _id: Joi.string(),
+    title: Joi.string()
+              .required()
+              .label('Title'),
+    numberInStock: Joi.number()
+                      .positive()
+                      .integer()
+                      .max(100)
+                      .required()
+                      .label('Number in Stock'),
+    dailyRentalRate: Joi.number()
+                        .required()
+                        .positive()
+                        .max(10)
+                        .label('Rate'),
+    genreId: Joi.string()
+              .required()
+              .label('Genre'),
+  }
+
+  componentDidMount() {
+    const emptyGenre = { _id: '', name: '' };
+    const genres = [ emptyGenre, ...getGenres()];
+    this.setState({ genres });
+    
+    const movieId = this.props.match.params.id;
+    if (movieId === 'new') return;
+
+    const movie = getMovie(movieId);
+    if (!movie) return this.props.history.replace('/not-found');
+
+    this.setState({ data: this.initializeData(movie) })
+  }
+
+  initializeData(movie) {
+    const { _id, title, genre, numberInStock, dailyRentalRate } = movie;
+    
+    return {
+      _id,
+      title,
+      genreId: genre._id,
+      numberInStock,
+      dailyRentalRate
     }
   }
 
@@ -88,15 +70,7 @@ class MovieForm extends Form {
   }
 
   doSubmit() {
-    const { data } = this.state;
-    const newMovie = { 
-      _id: data._id,
-      title: data.title,
-      genreId: data.genreId,
-      numberInStock: data.numberInStock,
-      dailyRentalRate: data.dailyRentalRate,
-    }
-    saveMovie(newMovie);
+    saveMovie(this.state.data);
 
     this.props.history.push('/movies');
   }
@@ -107,7 +81,7 @@ class MovieForm extends Form {
         <h1>Movie Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput('title', 'Title')}
-          {this.renderCheckBox('genreId', 'Genre', this.formatGenres())}
+          {this.renderCombobox('genreId', 'Genre', this.formatGenres())}
           {this.renderInput('numberInStock', 'Number in stock', 'number')}
           {this.renderInput('dailyRentalRate', 'Rate', 'number')}
           {this.renderButton('Save')}

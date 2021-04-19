@@ -84,7 +84,7 @@ export function saveMovie(movie) {
   movieInDb.liked = movie.liked;
 
   if (!movieInDb._id) {
-    movieInDb._id = Date.now();
+    movieInDb._id = Date.now().toString();
     movies.push(movieInDb);
   }
 

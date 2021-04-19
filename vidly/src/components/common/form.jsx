@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import Joi from 'joi-browser';
 import Input from './input';
-import Checkbox from './checkbox';
+import Combobox from './combobox';
 
 class Form extends Component {
   state = {
@@ -73,29 +73,16 @@ class Form extends Component {
                    {...other} />)
   }
 
-  renderCheckBox(name, label, options, other={}) {
+  renderCombobox(name, label, options, other={}) {
     const { data, errors } = this.state;
 
-    return (<Checkbox name={name}
+    return (<Combobox name={name}
                       label={label}
                       options={options}
                       value={data[name]}
                       error={errors[name]} 
                       onChange={this.handleChange} 
                       {...other} />);
-    // return (
-    //   <div className="form-group">
-    //     <label htmlFor={name} className="control-label">{label}</label>
-    //     <div>
-    //       <select className="form-control" id={name} name={name} value={data[name]} onChange={e => this.handleChange(e)}>
-    //         {options && options.map(option => (
-    //           <option key={option.value} value={option.value}>{option.name}</option>  
-    //         ))}
-    //       </select>
-    //     </div>
-    //     {errors[name] && <div className="alert alert-danger">{errors[name]}</div>}
-    //   </div>
-    // );
   }
 }
  

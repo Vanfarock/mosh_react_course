@@ -1,7 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
-const Checkbox = ({name, label, options, error, ...other}) => {
+const Combobox = ({name, label, options, error, ...other}) => {
   return (
     <div className="form-group">
       <label htmlFor={name} className="control-label">{label}</label>
@@ -21,11 +21,11 @@ const Checkbox = ({name, label, options, error, ...other}) => {
   );
 }
 
-Checkbox.propTypes = {
+Combobox.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   error: PropTypes.string
 }
  
-export default Checkbox;
+export default Combobox;
