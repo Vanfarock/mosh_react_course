@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import "./index.scss";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import logger from "./services/logService";
+import App from "./App";
+import "./index.scss";
 import "bootstrap/dist/css/bootstrap.css";
+
+logger.init();
 
 ReactDOM.render(
   <React.StrictMode>
