@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-axios.interceptors.response(null, (error) => {
+axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&
     error.response.status >= 400 &&
@@ -14,9 +14,11 @@ axios.interceptors.response(null, (error) => {
   return Promise.reject(error);
 });
 
-export default {
+const httpService = {
   get: axios.get,
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
 };
+
+export default httpService;

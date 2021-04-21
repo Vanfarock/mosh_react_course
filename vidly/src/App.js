@@ -1,5 +1,7 @@
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import NavBar from "./components/navbar";
 import Movies from "./components/movies";
 import MovieForm from "./components/movieForm";
@@ -13,6 +15,7 @@ function App() {
   return (
     <main className="container-fluid">
       <NavBar />
+      <ToastContainer />
       <div className="container-lg">
         <Switch>
           <Route path="/login" component={LoginForm} />

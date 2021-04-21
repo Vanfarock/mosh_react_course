@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { getMovies, saveMovie, deleteMovie } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
+import { getMovies, saveMovie, deleteMovie } from '../services/movieService';
+import { getGenres } from './../services/genreService';
 import MoviesTable from './moviesTable';
 import Searchbox from './common/searchbox';
 import ListGroup from './common/listGroup';
@@ -22,15 +22,20 @@ class Movies extends Component {
     }
   };
 
-  componentDidMount() {
-    const currentGenre ={_id: '', name: 'All Genres'};
-    const genres = [currentGenre, ...getGenres()];
-    
-    this.setState({
-      movies: getMovies(),
-      currentGenre,
-      genres
-    })
+  async componentDidMount() {
+    try {
+      const currentGenre ={_id: '', name: 'All Genres'};
+      const genres = [currentGenre, ...await getGenres()];
+  
+      this.setState({
+        movies: await getMovies(),
+        currentGenre,
+        genres
+      });
+    }
+    catch (ex) {
+      console.log(ex);
+    }
   }
 
   handleGenreChange = genre => {
@@ -94,7 +99,7 @@ class Movies extends Component {
     const filtered = this.filterMovie();
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const movies = paginate(sorted, currentPage, pageSize);
-    return { totalCount: filtered.length, data: movies} ;
+    return { totalCount: filtered.length || 0, data: movies} ;
   }
 
   filterMovie() {
