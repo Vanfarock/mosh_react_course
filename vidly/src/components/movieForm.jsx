@@ -37,23 +37,30 @@ class MovieForm extends Form {
               .label('Genre'),
   }
 
-  async componentDidMount() {
+  async populateGenres() {
+    const emptyGenre = { _id: '', name: '' };
+    const { data } = await getGenres();
+    const genres = [ emptyGenre, ...data];
+    this.setState({ genres });
+  }
+
+  async populateMovie() {
     try {
-      const emptyGenre = { _id: '', name: '' };
-      const genres = [ emptyGenre, ...await getGenres()];
-      this.setState({ genres });
-      
       const movieId = this.props.match.params.id;
       if (movieId === 'new') return;
-  
-      const movie = await getMovie(movieId);
-      if (!movie) return this.props.history.replace('/not-found');
-  
+    
+      const { data: movie } = await getMovie(movieId);
       this.setState({ data: this.initializeData(movie) })
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        this.props.history.replace('/not-found');
+      }
     }
-    catch (ex) {
-      console.log(ex);
-    }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
   }
 
   initializeData(movie) {
@@ -74,8 +81,8 @@ class MovieForm extends Form {
     return genres.map(g => ({ value: g._id, name: g.name }));
   }
 
-  doSubmit() {
-    saveMovie(this.state.data);
+  async doSubmit() {
+    await saveMovie(this.state.data);
 
     this.props.history.push('/movies');
   }

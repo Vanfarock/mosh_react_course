@@ -114,9 +114,12 @@ class Movies extends Component {
 
   filterMovie() {
     const { movies, currentGenre, searchQuery } = this.state;
-
-    if (searchQuery) return movies.filter(item => item.title.toLowerCase().startsWith(searchQuery));
     
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return movies.filter(item => item.title.toLowerCase().startsWith(query));
+    }
+
     return currentGenre && currentGenre._id
               ? movies.filter(item => item.genre._id === currentGenre._id) 
               : movies;
