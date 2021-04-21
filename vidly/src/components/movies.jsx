@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import { getMovies, saveMovie, deleteMovie } from '../services/movieService';
 import { getGenres } from './../services/genreService';
 import MoviesTable from './moviesTable';
@@ -23,19 +24,17 @@ class Movies extends Component {
   };
 
   async componentDidMount() {
-    try {
-      const currentGenre ={_id: '', name: 'All Genres'};
-      const genres = [currentGenre, ...await getGenres()];
-  
-      this.setState({
-        movies: await getMovies(),
-        currentGenre,
-        genres
-      });
-    }
-    catch (ex) {
-      console.log(ex);
-    }
+    const currentGenre ={_id: '', name: 'All Genres'};
+    const { data } = await getGenres();
+    const genres = [currentGenre, ...data];
+    
+    const { data: movies } = await getMovies();
+
+    this.setState({
+      movies,
+      currentGenre,
+      genres
+    });
   }
 
   handleGenreChange = genre => {
@@ -73,12 +72,23 @@ class Movies extends Component {
     });
   }
 
-  handleDelete = (movie) => {
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
     this.setState({
-      movies: this.state.movies.filter(m => m !== movie)
+      movies: originalMovies.filter(m => m !== movie)
     });
 
-    deleteMovie(movie._id);
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      this.setState({
+        movies: originalMovies
+      })
+      console.log(ex.response);
+      if (ex.response && ex.response.status === 404) {
+        toast.error('This movie has already been deleted.');
+      }
+    }
   }
 
   handleSort = sortColumn => {

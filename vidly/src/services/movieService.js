@@ -1,29 +1,20 @@
 import httpService from "./httpService";
 import config from "../config.json";
 
+const apiEndpoint = `${config.apiEndpoint}api/movies`;
+
 export async function getMovies() {
-  const response = await httpService.get(`${config.apiEndpoint}api/movies`);
-  return response.data;
+  return await httpService.get(apiEndpoint);
 }
 
 export async function getMovie(id) {
-  const response = await httpService.get(
-    `${config.apiEndpoint}api/movies/${id}`
-  );
-  return response.data;
+  return await httpService.get(`${apiEndpoint}/${id}`);
 }
 
 export async function saveMovie(movie) {
-  const response = await httpService.post(
-    `${config.apiEndpoint}api/movies`,
-    movie
-  );
-  return response.data;
+  return await httpService.post(apiEndpoint, movie);
 }
 
 export async function deleteMovie(id) {
-  const response = await httpService.delete(
-    `${config.apiEndpoint}api/movies/${id}`
-  );
-  return response.data;
+  return await httpService.delete(`${apiEndpoint}/${id}`);
 }
