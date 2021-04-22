@@ -81,7 +81,7 @@ class MovieForm extends Form {
     return genres.map(g => ({ value: g._id, name: g.name }));
   }
 
-  async doSubmit() {
+  doSubmit = async () => {
     await saveMovie(this.state.data);
 
     this.props.history.push('/movies');

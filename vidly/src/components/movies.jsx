@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 import { getMovies, saveMovie, deleteMovie } from '../services/movieService';
 import { getGenres } from './../services/genreService';
 import MoviesTable from './moviesTable';
@@ -58,10 +59,6 @@ class Movies extends Component {
 
     updatedMovie.genreId = updatedMovie.genre._id;
     saveMovie(updatedMovie);
-  }
-
-  handleNewMovie = () => {
-    this.props.history.push('/movies/new');
   }
 
   handleSearch = searchQuery => {
@@ -127,6 +124,7 @@ class Movies extends Component {
 
   render() { 
     const {pageSize, currentPage, movies, genres, currentGenre, searchQuery, sortColumn} = this.state;
+    const { user } = this.props;
 
     if (movies.length === 0) {
       return (
@@ -146,7 +144,7 @@ class Movies extends Component {
         </div>}
         
         <div className="col">
-          <button onClick={this.handleNewMovie} className="btn btn-primary mb-3">New movie</button>
+          { user && <Link to="/movies/new" className="btn btn-primary mb-3">New movie</Link>}
           <p>Showing {totalCount} movies in the database</p>
           <Searchbox value={searchQuery}
                      onChange={this.handleSearch} />

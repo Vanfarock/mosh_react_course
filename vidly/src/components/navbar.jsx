@@ -1,35 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-class NavBar extends Component {
-  render() { 
-    return (
-      <nav className="navbar navbar-light bg-light navbar-expand-lg mb-4">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">Vidly</Link>
-          <div className="navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink to="/movies" className="nav-link">Movies</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/customers" className="nav-link">Customers</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/rentals" className="nav-link">Rentals</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/login" className="nav-link">Login</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/register" className="nav-link">Register</NavLink>
-              </li>
-            </ul>
+const Navbar = ({ user }) => {
+  return (
+    <nav className="navbar navbar-light bg-light navbar-expand-lg mb-4">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">Vidly</Link>
+        <div className="navbar-collapse">
+          <div className="navbar-nav">
+            <NavLink to="/movies" className="nav-link">Movies</NavLink>
+            <NavLink to="/customers" className="nav-link">Customers</NavLink>
+            <NavLink to="/rentals" className="nav-link">Rentals</NavLink>
+
+          {!user && (
+            <>
+              <NavLink to="/login" className="nav-link">Login</NavLink>
+              <NavLink to="/register" className="nav-link">Register</NavLink>
+            </>
+          )}
+
+          {user && (
+            <>
+              <NavLink to="/profile" className="nav-link">{user.name}</NavLink>
+              <NavLink to="/logout" className="nav-link">Logout</NavLink>
+            </>
+          )}
           </div>
         </div>
-      </nav>
-    );
-  }
+      </div>
+    </nav>
+  );
 }
  
-export default NavBar;
+export default Navbar;
